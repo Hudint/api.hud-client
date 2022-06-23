@@ -7,7 +7,11 @@ var ApiClient = /** @class */ (function () {
         this.apiKeyword = apiKeyword;
     }
     ApiClient.prototype.emit = function (callName, args, callback) {
-        this.socket.emit(this.apiKeyword, callName, args, callback);
+        ApiClient.emit(this.socket, callName, args, callback, this.apiKeyword);
+    };
+    ApiClient.emit = function (socket, callName, args, callback, apiKeyword) {
+        if (apiKeyword === void 0) { apiKeyword = "api"; }
+        socket.emit(apiKeyword, callName, args, callback);
     };
     return ApiClient;
 }());
