@@ -29,11 +29,11 @@ export default class ApiClient {
         })
     }
 
-    emit(callName: string, args: Object, callback: (response: apiResponse) => void) {
+    emit(callName: string, args: Object, callback?: (response: apiResponse) => void) {
         ApiClient.emit(this.socket, callName, args, callback, this.apiKeyword);
     }
 
-    public static emit(socket: Socket, callName: string, args: Object, callback: (response: apiResponse) => void, apiKeyword: string = "api") {
+    public static emit(socket: Socket, callName: string, args: Object, callback?: (response: apiResponse) => void, apiKeyword: string = "api") {
         socket.emit(apiKeyword, callName, args, callback);
     }
 }

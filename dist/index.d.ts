@@ -10,7 +10,7 @@ export default class ApiClient {
     constructor(socket: Socket, apiKeyword?: string);
     setAutoErrorCallback(callback: () => void): void;
     emitR(callName: string, args: Object, callback: (result: any) => void): void;
-    emit(callName: string, args: Object, callback: (response: apiResponse) => void): void;
-    static emit(socket: Socket, callName: string, args: Object, callback: (response: apiResponse) => void, apiKeyword?: string): void;
+    emit(callName: string, args: Object, callback?: (response: apiResponse) => void): void;
+    static emit(socket: Socket, callName: string, args: Object, callback?: (response: apiResponse) => void, apiKeyword?: string): void;
 }
 export {};
