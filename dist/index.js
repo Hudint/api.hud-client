@@ -8,6 +8,7 @@ var ApiClient = /** @class */ (function () {
     }
     ApiClient.prototype.setAutoErrorCallback = function (callback) {
         this.autoErrorCallback = callback;
+        return this;
     };
     ApiClient.prototype.emitR = function (callName, args, callback) {
         var _this = this;

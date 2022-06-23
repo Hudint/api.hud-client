@@ -16,8 +16,9 @@ export default class ApiClient {
         this.apiKeyword = apiKeyword;
     }
 
-    setAutoErrorCallback(callback: () => void) {
+    setAutoErrorCallback(callback: () => void): ApiClient {
         this.autoErrorCallback = callback;
+        return this;
     }
 
     emitR(callName: string, args: Object, callback: (result: any) => void) {
