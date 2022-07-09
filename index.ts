@@ -6,6 +6,8 @@ type apiResponse = {
     result?: any
 }
 
+type errCallback = () => void;
+
 export default class ApiClient {
     private socket: Socket
     private apiKeyword: string
@@ -21,12 +23,15 @@ export default class ApiClient {
         return this;
     }
 
-    emitR(callName: string, args: Object, callback: (result: any) => void) {
+    emitR(callName: string, args: Object, callback: (result: any) => void, errCallback?: errCallback) {
         this.emit(callName, args, ({ error, result }) => {
             if (!error)
                 callback(result);
-            else if (this.autoErrorCallback != undefined)
+            else if (this.autoErrorCallback != undefined) {
                 this.autoErrorCallback();
+                if (errCallback instanceof Function)
+                    errCallback();
+            }
         })
     }
 

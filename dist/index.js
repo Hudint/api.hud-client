@@ -10,14 +10,17 @@ var ApiClient = /** @class */ (function () {
         this.autoErrorCallback = callback;
         return this;
     };
-    ApiClient.prototype.emitR = function (callName, args, callback) {
+    ApiClient.prototype.emitR = function (callName, args, callback, errCallback) {
         var _this = this;
         this.emit(callName, args, function (_a) {
             var error = _a.error, result = _a.result;
             if (!error)
                 callback(result);
-            else if (_this.autoErrorCallback != undefined)
+            else if (_this.autoErrorCallback != undefined) {
                 _this.autoErrorCallback();
+                if (errCallback instanceof Function)
+                    errCallback();
+            }
         });
     };
     ApiClient.prototype.emit = function (callName, args, callback) {
