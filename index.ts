@@ -3,7 +3,8 @@ import { Socket } from "socket.io-client";
 
 type apiResponse = {
     error: boolean,
-    result?: any
+    result?: any,
+    msg?: string
 }
 
 type errCallback = () => void;
@@ -11,24 +12,24 @@ type errCallback = () => void;
 export default class ApiClient {
     private socket: Socket
     private apiKeyword: string
-    private autoErrorCallback?: () => void
+    private autoErrorCallback?: (msg?: string) => void
 
     constructor(socket: Socket, apiKeyword: string = "api") {
         this.socket = socket;
         this.apiKeyword = apiKeyword;
     }
 
-    setAutoErrorCallback(callback: () => void): ApiClient {
+    setAutoErrorCallback(callback: (msg?: string) => void): ApiClient {
         this.autoErrorCallback = callback;
         return this;
     }
 
     emitR(callName: string, args: Object, callback: (result: any) => void, errCallback?: errCallback) {
-        this.emit(callName, args, ({ error, result }) => {
+        this.emit(callName, args, ({ error, result, msg }) => {
             if (!error)
                 callback(result);
             else if (this.autoErrorCallback != undefined) {
-                this.autoErrorCallback();
+                this.autoErrorCallback(msg);
                 if (errCallback instanceof Function)
                     errCallback();
             }

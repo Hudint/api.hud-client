@@ -13,11 +13,11 @@ var ApiClient = /** @class */ (function () {
     ApiClient.prototype.emitR = function (callName, args, callback, errCallback) {
         var _this = this;
         this.emit(callName, args, function (_a) {
-            var error = _a.error, result = _a.result;
+            var error = _a.error, result = _a.result, msg = _a.msg;
             if (!error)
                 callback(result);
             else if (_this.autoErrorCallback != undefined) {
-                _this.autoErrorCallback();
+                _this.autoErrorCallback(msg);
                 if (errCallback instanceof Function)
                     errCallback();
             }
