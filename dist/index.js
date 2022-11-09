@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var ApiClient = /** @class */ (function () {
     function ApiClient(socket, apiKeyword) {
@@ -6,6 +17,11 @@ var ApiClient = /** @class */ (function () {
         this.socket = socket;
         this.apiKeyword = apiKeyword;
     }
+    ApiClient.prototype.tryTriggerAutoCallback = function (msg) {
+        if (this.autoErrorCallback != undefined) {
+            this.autoErrorCallback(msg);
+        }
+    };
     ApiClient.prototype.setAutoErrorCallback = function (callback) {
         this.autoErrorCallback = callback;
         return this;
@@ -16,15 +32,19 @@ var ApiClient = /** @class */ (function () {
             var error = _a.error, result = _a.result, msg = _a.msg;
             if (!error)
                 callback(result);
-            else if (_this.autoErrorCallback != undefined) {
-                _this.autoErrorCallback(msg);
+            else {
+                _this.tryTriggerAutoCallback(msg);
                 if (errCallback instanceof Function)
                     errCallback();
             }
         });
     };
     ApiClient.prototype.emit = function (callName, args, callback) {
-        ApiClient.emit(this.socket, callName, args, callback, this.apiKeyword);
+        var _this = this;
+        ApiClient.emit(this.socket, callName, args, function (response) {
+            if (callback)
+                callback(__assign(__assign({}, response), { triggerError: function () { return _this.tryTriggerAutoCallback(response.msg); } }));
+        }, this.apiKeyword);
     };
     ApiClient.emit = function (socket, callName, args, callback, apiKeyword) {
         if (apiKeyword === void 0) { apiKeyword = "api"; }
